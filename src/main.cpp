@@ -14,6 +14,7 @@ using namespace chrono;
 
 
 int main(int argc, char** argv) {
+    cout << "Start" << endl;
     vector<unordered_map<string, int>> Succ;
     // vector<int> A;
     unordered_map<int, int> A;
@@ -44,6 +45,9 @@ int main(int argc, char** argv) {
     Node* root = new Node;
     createFTtree(root, failure_links, parent_children);
 
+    parent_children.clear();
+    failure_links.clear();
+
     cout << "FTtree created" << endl;
 
     vector<vector<int>> sorted_tuples;
@@ -68,6 +72,7 @@ int main(int argc, char** argv) {
     BFS_merge_intervals(root, output_file_name, A);
 
     A.clear();
+    delete root; // Is this correct???
 
     auto end_time = steady_clock::now();
 

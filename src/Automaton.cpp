@@ -49,36 +49,27 @@ void make_trie_file(vector<unordered_map<string, int>> &Succ, string &file_name,
                 temp.clear();
                 depth = 1;
                 num_state = 0;
-                // cout << "Add end of string \n";
             } else {
                 if (Succ.empty() or num_state >= Succ.size()) {                 // add new transition to trie
-                    // cout << "Extend trie \n";
                     unordered_map<string, int> temp;
                     temp.insert({a,num_succ});
                     Succ.insert(Succ.begin() + num_state, temp);
                     temp.clear();
-                    // cout << "Extend: Succ[" << num_state << "] = {(" << a << ": " << Succ[num_state][a] << ")} \n";
                     num_state = num_succ;
                     num_succ++;
                     depth_list.push_back(depth);
                     depth++;
                 } else {                  
                     if (state_present(Succ[num_state], a) == false){      // add a new transistion to existing state - checks if the transition is present
-                        // cout << "Add new transition to existing state \n";
-                        
                         unordered_map<string, int> temp = Succ[num_state];
                         temp.insert(temp.begin(), {a,num_succ});
                         Succ.at(num_state) = temp;
-
-
-                        // cout << "New state: Succ[" << num_state << "] = {(" << a << ": " << Succ[num_state][a] << ")} \n";  
+                        temp.clear();
                         num_state = num_succ;
                         num_succ++;
                         depth_list.push_back(depth);
                         depth++;
                     } else {                                                    // state + transistion is already present
-                        // cout << "Add existing state \n";
-                        // cout << "Existing: Succ[" << num_state << "] = {(" << a << ": " << Succ[num_state][a] << ")} \n";
                         unordered_map<string, int> state_table;
                         state_table = Succ[num_state];
                         num_state = state_table[a];
@@ -125,9 +116,9 @@ void create_failure_links(vector<unordered_map<string, int>> &trie, vector<int> 
     while (!F.empty()) {
         int t = F.front();                          // get the first state in the queue
         F.pop();
-        unordered_map<string, int>* temp_map;
-        temp_map = &trie[t];                         // get all the transitions of state t
-        for (auto const &pair: *temp_map) {          // for each pair (a,p) of the transisitions of state t
+        unordered_map<string, int> temp_map;
+        temp_map = trie[t];                         // get all the transitions of state t
+        for (auto const &pair: temp_map) {          // for each pair (a,p) of the transisitions of state t
             string a = pair.first;
             int p = pair.second;
             // cout << "state: " << p << "\n";
@@ -139,7 +130,8 @@ void create_failure_links(vector<unordered_map<string, int>> &trie, vector<int> 
                 failure_links[p] = fail_state;
             }
             F.push(p);                              // add state p to the queue
-        }        
+        }
+        temp_map.clear();
     }
 }
 
@@ -174,6 +166,7 @@ void DFS_A_array(vector<unordered_map<string, int>> &Succ, unordered_map<int, in
             int next_state = goto_trans.second;
             S.push(next_state);
         }
+        state.clear();
     }
 }
 

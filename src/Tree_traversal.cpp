@@ -58,6 +58,7 @@ void DFS_branchless_interval(Node* &root, vector<unordered_map<string, int>> &Su
                     if (parent->getChildren().size() == 1){
                         parent->setRemoveNode();
                         parent->setBranchlessSubpath({});
+                        b_tuples.clear();
                     }
                 } else{
                     vector<int> interval;
@@ -104,111 +105,6 @@ void sort_tuples(vector<vector<int>> &sorted_tuples, unordered_map<int, int> &no
 }
 
 
-void DFS_merge_branchless_sort(Node* &root){
-    stack<Node*> S;
-    S.push(root);
-    while (!S.empty()){
-        Node* node = S.top();
-        S.pop();
-    
-        vector<Node*> list_children = node->getChildren();
-        if (!node->getRemoveNode()){
-            int num_state = node->getState();
-            // cout << "State: " << num_state << endl;
-            vector<vector<int>> b_tuples = node->getSubpaths();
-            sort(b_tuples.begin(), b_tuples.end());
-            if (b_tuples.size() > 0){ 
-                int min_element = 1;
-                int max_element = 1;
-                vector<vector<vector<int>>> clusters;
-                vector<vector<int>> indiv_cluster;
-                vector<vector<int>> comp_rep;
-                
-                            
-                int num_tuple = 0;
-                for(vector<int> subpath : b_tuples){        // loop to get clusters within branchless subpaths
-                    num_tuple++;
-                    if (subpath[0] <= max_element){
-                        if (indiv_cluster.empty()){
-                            indiv_cluster.push_back({min_element, max_element});
-                        }
-                        if (indiv_cluster.back()[0] == subpath[0] && indiv_cluster.back()[1] == subpath[1] && indiv_cluster.size() > 1){
-                            indiv_cluster.pop_back();
-                        }
-                        if (subpath[1] > max_element){
-                            max_element = subpath[1];
-                            indiv_cluster[0] = {min_element, max_element};
-                        }
-                        indiv_cluster.push_back(subpath);
-                    } else {
-                        if(!indiv_cluster.empty()){
-                            clusters.push_back(indiv_cluster);
-                        }
-                        min_element = subpath[0];
-                        max_element = subpath[1];
-                        indiv_cluster = {};
-                        indiv_cluster.push_back({min_element, max_element});
-                        indiv_cluster.push_back(subpath);
-                    }
-                    
-                    if(num_tuple == b_tuples.size()){
-                        clusters.push_back(indiv_cluster);
-                    }
-                    
-                }
-
-                b_tuples.clear();
-
-                vector<vector<int>> vector_stack;
-
-                for (int i = 0; i < clusters.size(); i++){              // loop to get compact representation
-                    // cout << "Cluster: " << i << endl;
-                    vector<vector<int>> cluster = clusters[i];
-                    int min = cluster[0][0];
-                    int max = cluster[0][1];
-                    int k = min;
-                    cluster.erase(cluster.begin());
-                    for ( ; k <= max; k++){
-                        while(!cluster.empty()){
-                            vector<int> subpath = cluster[0];
-                            if(subpath[0] == k){
-                                if(k != min){
-                                    vector_stack.insert(vector_stack.begin(), {subpath[1],subpath[2]});
-                                } else {
-                                    vector_stack.push_back({subpath[1],subpath[2]});
-                                }
-                                cluster.erase(cluster.begin());
-                            } else {
-                                break;
-                            }
-                        }
-                        int max_label = 0;
-                        while(!vector_stack.empty()){
-                            vector<int> int_label = vector_stack[0];
-                            if (k <= int_label[0] && int_label[1] > max_label){
-                                comp_rep.push_back({k, int_label[1]});
-                                max_label = int_label[1];
-                            }
-                            if (k == int_label[0]){
-                                vector_stack.erase(vector_stack.begin());
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-                }
-                
-                node->setCompRep(comp_rep);
-            }
-            node->clearData_Branchless();
-
-            for (Node* child : list_children){
-                S.push(child);
-            }
-        }
-    }
-}
-
 void DFS_merge_branchles(Node* &root, unordered_map<int,int> &node_index, vector<vector<int>> &sorted_tuples){
     stack<Node*> S;
     S.push(root);
@@ -225,6 +121,7 @@ void DFS_merge_branchles(Node* &root, unordered_map<int,int> &node_index, vector
             bool start = true;
             
             if (index > 0 || num_state == 1){
+                // cout << "State: " << node->getState() << endl;
                 while(start){
                     b_tuples.push(sorted_tuples[index]);
                     index++;
@@ -233,8 +130,8 @@ void DFS_merge_branchles(Node* &root, unordered_map<int,int> &node_index, vector
                     }
                 }
 
-                int min_element = 1;
-                int max_element = 1;
+                int min_element = 0;
+                int max_element = 0;
                 vector<vector<vector<int>>> clusters;
                 vector<vector<int>> indiv_cluster;
                 
