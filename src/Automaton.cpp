@@ -143,6 +143,16 @@ void create_failure_links(vector<unordered_map<string, int>> &trie, vector<int> 
     }
 }
 
+void create_parent_child_map(vector<int> &failure_links, unordered_map<int, vector<int>> &map_parent_child){
+    for(int i = 1; i < failure_links.size(); i++){  ///skip root
+        if (map_parent_child.find(failure_links[i]) == map_parent_child.end()){
+            map_parent_child[failure_links[i]] = {i};
+        } else{
+            map_parent_child[failure_links[i]].push_back(i);
+        }   
+    }
+}
+
 void DFS_A_array(vector<unordered_map<string, int>> &Succ, unordered_map<int, int> &A){
     int i = 1;
     stack<int> S;
@@ -203,3 +213,6 @@ void createFTtree(Node* &root, vector<int> &failure_links){
         }
     }
 }
+
+//TODO: failure links to hashmap parent:{children}
+// 

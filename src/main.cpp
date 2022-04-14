@@ -34,7 +34,10 @@ int main(int argc, char** argv) {
     vector<int> failure_links(Succ.size());
     create_failure_links(Succ, failure_links);
 
-    cout << "feature links created" << endl;
+    unordered_map<int, vector<int>> parent_children;
+    create_parent_child_map(failure_links, parent_children);
+
+    cout << "failure links created" << endl;
 
     auto start_time = steady_clock::now();
 
