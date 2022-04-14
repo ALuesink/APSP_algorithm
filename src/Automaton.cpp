@@ -178,7 +178,7 @@ void DFS_A_array(vector<unordered_map<string, int>> &Succ, unordered_map<int, in
 }
 
 
-void createFTtree(Node* &root, vector<int> &failure_links){
+void createFTtree(Node* &root, vector<int> &failure_links, unordered_map<int, vector<int>> &parent_child_map){
     root->setState(0);
     root->setParent(NULL);
 
@@ -195,22 +195,12 @@ void createFTtree(Node* &root, vector<int> &failure_links){
         Node* current_node = q_nodes.front();
         q_nodes.pop();
 
-        auto itter = begin(failure_links);
-        while (itter != end(failure_links))
-        {
-            itter = find(itter, end(failure_links), parent_state);
-            if (itter != end(failure_links)){
-                auto const pos = distance(begin(failure_links), itter);
-                int num_state = pos;
-                q_states.push(num_state);
-                
-                // cout << "state: " << num_state << " parent state: " << parent_state << "\n";
-
-                current_node->insertNode(current_node, num_state, q_nodes);
-
-                ++itter;
-            }
+        vector<int> list_children = parent_child_map[parent_state];
+        for (int child : list_children){
+            q_states.push(child);
+            current_node->insertNode(current_node, child, q_nodes);
         }
+        
     }
 }
 

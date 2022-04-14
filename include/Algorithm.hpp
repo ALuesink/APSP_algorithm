@@ -48,7 +48,6 @@ public:
     bool getStartBranchless();
     bool getRemoveNode();
 
-    // void DFS(Node* &node);
 
 
     Node();
@@ -62,9 +61,8 @@ void make_trie_file(vector<unordered_map<string, int>> &Succ, string &file_name,
 bool state_present(unordered_map<string, int> &succ_state, string &a);
 void create_failure_links(vector<unordered_map<string, int>> &trie, vector<int> &failure_links);
 int target_by_failure(vector<unordered_map<string, int>> &trie, vector<int> &failure_links, int &num_state, string &a);
-// vector<int> getArray(vector<unordered_map<string,int>> &Succ);
 void DFS_A_array(vector<unordered_map<string, int>> &Succ, unordered_map<int, int> &A);
-void createFTtree(Node* &node, vector<int> &failure_links);
+void createFTtree(Node* &root, vector<int> &failure_links, unordered_map<int, vector<int>> &parent_child_map);
 
 void getInterval(Node* &node, vector<unordered_map<string, int>> &Succ, unordered_map<int, int> &A, vector<int> &interval);
 void DFS_branchless_interval(Node* &root, vector<unordered_map<string, int>> &Succ, unordered_map<int, int> &A, vector<int> &depth, vector<vector<int>> &sorted_tuples);

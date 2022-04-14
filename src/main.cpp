@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
     auto start_time = steady_clock::now();
 
     Node* root = new Node;
-    createFTtree(root, failure_links);
+    createFTtree(root, failure_links, parent_children);
 
     cout << "FTtree created" << endl;
 
