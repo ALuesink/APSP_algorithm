@@ -53,10 +53,12 @@ int main(int argc, char** argv) {
     sort_tuples(sorted_tuples, node_index);
 
     Succ.clear();
+    // A.clear();
     depth_list.clear();
 
     cout << "branchless interval" << endl;
 
+    // DFS_merge_branchless_sort(root);
     DFS_merge_branchles(root, node_index, sorted_tuples);
     sorted_tuples.clear();
     node_index.clear();

@@ -67,10 +67,7 @@ void createFTtree(Node* &root, vector<int> &failure_links, unordered_map<int, ve
 void getInterval(Node* &node, vector<unordered_map<string, int>> &Succ, unordered_map<int, int> &A, vector<int> &interval);
 void DFS_branchless_interval(Node* &root, vector<unordered_map<string, int>> &Succ, unordered_map<int, int> &A, vector<int> &depth, vector<vector<int>> &sorted_tuples);
 void create_parent_child_map(vector<int> &failure_links, unordered_map<int, vector<int>> &map_parent_child);
-// void DFS_merge_branchless_sort (Node* &root);
+void DFS_merge_branchless_sort (Node* &root);
 void DFS_merge_branchles(Node* &root, unordered_map<int,int> &node_index, vector<vector<int>> &sorted_tuples);
 void BFS_merge_intervals(Node* &node, string &file_name, unordered_map<int, int> &A);
 void sort_tuples(vector<vector<int>> &sorted_tuples, unordered_map<int, int> &node_index);
-
-
-

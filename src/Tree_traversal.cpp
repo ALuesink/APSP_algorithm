@@ -72,10 +72,10 @@ void DFS_branchless_interval(Node* &root, vector<unordered_map<string, int>> &Su
                     
                     if (!node->getStartBranchless()){
                         node->setBranchlessSubpath(b_tuples);
-                        // for (vector<int> tuple : b_tuples){
-                        //     tuple.insert(tuple.begin(), node->getState());
-                        //     sorted_tuples.push_back(tuple);
-                        // }
+                        for (vector<int> tuple : b_tuples){
+                            tuple.insert(tuple.begin(), node->getState());
+                            sorted_tuples.push_back(tuple);
+                        }
                         b_tuples.clear();
                     }
 
@@ -428,4 +428,3 @@ void BFS_merge_intervals (Node* &node, string &file_name, unordered_map<int, int
     }
     out_file.close();
 }
-
