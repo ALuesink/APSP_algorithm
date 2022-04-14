@@ -72,10 +72,10 @@ void DFS_branchless_interval(Node* &root, vector<unordered_map<string, int>> &Su
                     
                     if (!node->getStartBranchless()){
                         node->setBranchlessSubpath(b_tuples);
-                        for (vector<int> tuple : b_tuples){
-                            tuple.insert(tuple.begin(), node->getState());
-                            sorted_tuples.push_back(tuple);
-                        }
+                        // for (vector<int> tuple : b_tuples){
+                        //     tuple.insert(tuple.begin(), node->getState());
+                        //     sorted_tuples.push_back(tuple);
+                        // }
                         b_tuples.clear();
                     }
 
@@ -88,20 +88,20 @@ void DFS_branchless_interval(Node* &root, vector<unordered_map<string, int>> &Su
     } 
 }
 
-void sort_tuples(vector<vector<int>> &sorted_tuples, unordered_map<int, int> &node_index){
-    sort(sorted_tuples.begin(), sorted_tuples.end());
-    int num_state = 0;
-    int i = 0;
-    for(vector<int> tuple : sorted_tuples){
-        if(tuple[0] != num_state){
-            node_index.insert({tuple[0], i});
-            num_state++;
-            i++;
-        } else{
-            i++;
-        }
-    }
-}
+// void sort_tuples(vector<vector<int>> &sorted_tuples, unordered_map<int, int> &node_index){
+//     sort(sorted_tuples.begin(), sorted_tuples.end());
+//     int num_state = 0;
+//     int i = 0;
+//     for(vector<int> tuple : sorted_tuples){
+//         if(tuple[0] != num_state){
+//             node_index.insert({tuple[0], i});
+//             num_state++;
+//             i++;
+//         } else{
+//             i++;
+//         }
+//     }
+// }
 
 
 void DFS_merge_branchless_sort(Node* &root){
