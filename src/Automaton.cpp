@@ -204,5 +204,3 @@ void createFTtree(Node* &root, vector<int> &failure_links, unordered_map<int, ve
     }
 }
 
-//TODO: failure links to hashmap parent:{children}
-// 
