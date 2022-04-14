@@ -43,11 +43,11 @@ int main(int argc, char** argv) {
 
     cout << "FTtree created" << endl;
 
-    // vector<vector<int>> sorted_tuples;
-    // unordered_map<int, int> node_index;
+    vector<vector<int>> sorted_tuples;
+    unordered_map<int, int> node_index;
 
-    DFS_branchless_interval(root, Succ, A, depth_list);
-    // sort_tuples(sorted_tuples, node_index);
+    DFS_branchless_interval(root, Succ, A, depth_list, sorted_tuples);
+    sort_tuples(sorted_tuples, node_index);
 
     Succ.clear();
     // A.clear();
@@ -55,7 +55,10 @@ int main(int argc, char** argv) {
 
     cout << "branchless interval" << endl;
 
-    DFS_merge_branchless_sort(root);
+    // DFS_merge_branchless_sort(root);
+    DFS_merge_branchles(root, node_index, sorted_tuples);
+    sorted_tuples.clear();
+    node_index.clear();
     
     cout << "merge branchless" << endl;
 

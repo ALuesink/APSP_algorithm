@@ -37,7 +37,7 @@ void getInterval(Node* &node, vector<unordered_map<string, int>> &Succ, unordere
 }
 
 
-void DFS_branchless_interval(Node* &root, vector<unordered_map<string, int>> &Succ, unordered_map<int, int> &A, vector<int> &depth){
+void DFS_branchless_interval(Node* &root, vector<unordered_map<string, int>> &Succ, unordered_map<int, int> &A, vector<int> &depth, vector<vector<int>> &sorted_tuples){
     vector<vector<int>> b_tuples = {};
     stack<Node*> S;
     S.push(root);
@@ -72,10 +72,10 @@ void DFS_branchless_interval(Node* &root, vector<unordered_map<string, int>> &Su
                     
                     if (!node->getStartBranchless()){
                         node->setBranchlessSubpath(b_tuples);
-                        // for (vector<int> tuple : b_tuples){
-                        //     tuple.insert(tuple.begin(), node->getState());
-                        //     sorted_tuples.push_back(tuple);
-                        // }
+                        for (vector<int> tuple : b_tuples){
+                            tuple.insert(tuple.begin(), node->getState());
+                            sorted_tuples.push_back(tuple);
+                        }
                         b_tuples.clear();
                     }
 
@@ -89,10 +89,6 @@ void DFS_branchless_interval(Node* &root, vector<unordered_map<string, int>> &Su
 }
 
 void sort_tuples(vector<vector<int>> &sorted_tuples, unordered_map<int, int> &node_index){
-    // boost::sort::spreadsort::spreadsort(sorted_tuples.begin(), sorted_tuples.end());
-    // boost::sort(sorted_tuples.begin(), sorted_tuples.end());
-    // vector<int> test = {1,5,3,6,7,8};
-    // boost::sort::spreadsort::spreadsort(test.begin(), test.end());
     sort(sorted_tuples.begin(), sorted_tuples.end());
     int num_state = 0;
     int i = 0;
@@ -219,28 +215,36 @@ void DFS_merge_branchles(Node* &root, unordered_map<int,int> &node_index, vector
     while (!S.empty()){
         Node* node = S.top();
         S.pop();
-    
-        vector<Node*> list_children = node->getChildren();
+        // cout << "State: " << node->getState() << endl;
         if (!node->getRemoveNode()){
             int num_state = node->getState();
-            // cout << "State: " << num_state << endl;
-            vector<vector<int>> b_tuples = node->getSubpaths();
+            
+            queue<vector<int>> b_tuples;
 
             int index = node_index[num_state];
-
+            bool start = true;
             
-            if (index > 0){
-                // for(i = index; index)
+            if (index > 0 || num_state == 1){
+                while(start){
+                    b_tuples.push(sorted_tuples[index]);
+                    index++;
+                    if(index >= sorted_tuples.size() || sorted_tuples[index][0] != num_state){
+                        start = false;
+                    }
+                }
 
                 int min_element = 1;
                 int max_element = 1;
                 vector<vector<vector<int>>> clusters;
                 vector<vector<int>> indiv_cluster;
-                vector<vector<int>> comp_rep;
                 
                             
                 int num_tuple = 0;
-                for(vector<int> subpath : b_tuples){        // loop to get clusters within branchless subpaths
+                while(!b_tuples.empty()){        // loop to get clusters within branchless subpaths
+                    vector<int> subpath;
+                    subpath = b_tuples.front();
+                    subpath.erase(subpath.begin());
+                    b_tuples.pop();
                     num_tuple++;
                     if (subpath[0] <= max_element){
                         if (indiv_cluster.empty()){
@@ -249,7 +253,7 @@ void DFS_merge_branchles(Node* &root, unordered_map<int,int> &node_index, vector
                         if (indiv_cluster.back()[0] == subpath[0] && indiv_cluster.back()[1] == subpath[1] && indiv_cluster.size() > 1){
                             indiv_cluster.pop_back();
                         }
-                        if (subpath[1] > max_element){
+                        if (subpath[0] > max_element){
                             max_element = subpath[1];
                             indiv_cluster[0] = {min_element, max_element};
                         }
@@ -265,15 +269,15 @@ void DFS_merge_branchles(Node* &root, unordered_map<int,int> &node_index, vector
                         indiv_cluster.push_back(subpath);
                     }
                     
-                    if(num_tuple == b_tuples.size()){
+                    if(b_tuples.empty()){
                         clusters.push_back(indiv_cluster);
                     }
                     
                 }
-
-                b_tuples.clear();
+                indiv_cluster.clear();
 
                 vector<vector<int>> vector_stack;
+                vector<vector<int>> comp_rep;
 
                 for (int i = 0; i < clusters.size(); i++){              // loop to get compact representation
                     // cout << "Cluster: " << i << endl;
@@ -312,13 +316,18 @@ void DFS_merge_branchles(Node* &root, unordered_map<int,int> &node_index, vector
                     }
                 }
                 
+                vector_stack.clear();
                 node->setCompRep(comp_rep);
+                comp_rep.clear();
             }
             node->clearData_Branchless();
 
+            vector<Node*> list_children;
+            list_children = node->getChildren();
             for (Node* child : list_children){
                 S.push(child);
             }
+            list_children.clear();
         }
     }
 }
