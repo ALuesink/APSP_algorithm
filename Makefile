@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -ggdb
+CFLAGS= -msse3 -O3 -fomit-frame-pointer -funroll-loops 
 
 APPNAME = algorithm
 EXT = .cpp
