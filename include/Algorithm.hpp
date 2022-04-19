@@ -69,3 +69,4 @@ void DFS_merge_branchless_sort (Node* &root);
 void DFS_merge_branchles(Node* &root, unordered_map<int,int> &node_index, vector<vector<int>> &sorted_tuples);
 void BFS_merge_intervals(Node* &node, string &file_name, unordered_map<int, int> &A);
 void sort_tuples(vector<vector<int>> &sorted_tuples, unordered_map<int, int> &node_index);
+void DFS_merge_intervals(Node* &root, string &file_name, unordered_map<int, int> &A);

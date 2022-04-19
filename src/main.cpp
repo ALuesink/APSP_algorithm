@@ -14,9 +14,8 @@ using namespace chrono;
 
 
 int main(int argc, char** argv) {
-    cout << "Start" << endl;
+    // cout << "Start" << endl;
     vector<unordered_map<string, int>> Succ;
-    // vector<int> A;
     unordered_map<int, int> A;
     vector<int> depth_list;
 
@@ -25,12 +24,12 @@ int main(int argc, char** argv) {
 
     make_trie_file(Succ, input_file_name, depth_list);
     
-    cout << "Trie created" << endl;
+    // cout << "Trie created" << endl;
     
     int i = 1;
     DFS_A_array(Succ, A);
 
-    cout << "Create A array" << endl;
+    // cout << "Create A array" << endl;
 
     vector<int> failure_links(Succ.size());
     create_failure_links(Succ, failure_links);
@@ -38,9 +37,9 @@ int main(int argc, char** argv) {
     unordered_map<int, vector<int>> parent_children;
     create_parent_child_map(failure_links, parent_children);
 
-    cout << "failure links created" << endl;
+    // cout << "failure links created" << endl;
 
-    auto start_time = steady_clock::now();
+    // auto start_time = steady_clock::now();
 
     Node* root = new Node;
     createFTtree(root, failure_links, parent_children);
@@ -48,7 +47,7 @@ int main(int argc, char** argv) {
     parent_children.clear();
     failure_links.clear();
 
-    cout << "FTtree created" << endl;
+    // cout << "FTtree created" << endl;
 
     vector<vector<int>> sorted_tuples;
     unordered_map<int, int> node_index;
@@ -60,25 +59,27 @@ int main(int argc, char** argv) {
     // A.clear();
     depth_list.clear();
 
-    cout << "branchless interval" << endl;
+    // cout << "branchless interval" << endl;
 
     // DFS_merge_branchless_sort(root);
     DFS_merge_branchles(root, node_index, sorted_tuples);
     sorted_tuples.clear();
     node_index.clear();
     
-    cout << "merge branchless" << endl;
+    // cout << "merge branchless" << endl;
+
+    DFS_merge_intervals(root, output_file_name, A);
 
     BFS_merge_intervals(root, output_file_name, A);
 
     A.clear();
     // delete root; // Is this correct???
 
-    auto end_time = steady_clock::now();
+    // auto end_time = steady_clock::now();
 
-    cout << "Done" << endl;
+    // cout << "Done" << endl;
 
-    cout << "Elapsed time (milliseconds): " << duration_cast<chrono::milliseconds>(end_time - start_time).count() << endl;
+    // cout << "Elapsed time (milliseconds): " << duration_cast<chrono::milliseconds>(end_time - start_time).count() << endl;
 
     return 0;
 }
