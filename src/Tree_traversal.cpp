@@ -71,7 +71,7 @@ void DFS_branchless_interval(Node* &root, vector<unordered_map<string, int>> &Su
                     
                     b_tuples.push_back(interval);
                     
-                    if (!node->getStartBranchless()){
+                    if (!node->StartBranchless()){
                         node->setBranchlessSubpath(b_tuples);
                         for (vector<int> tuple : b_tuples){
                             tuple.insert(tuple.begin(), node->getState());
@@ -280,6 +280,7 @@ void BFS_merge_intervals (Node* &node, string &file_name, unordered_map<int, int
     out_file.open(file_name);
     out_file << "String a - string b: depth" << endl;
     
+    vector<vector<int>> u_comp_rep;
     queue<Node*> Q;
     Q.push(node);
     while (!Q.empty()){
@@ -292,23 +293,19 @@ void BFS_merge_intervals (Node* &node, string &file_name, unordered_map<int, int
                 // cout << "current state: " << child->getState() << "\t parent state: " << current_node->getState() << endl;
                 Q.push(child);
                 
-                if (!child->getStartBranchless()){
+                if (!child->StartBranchless()){
                     vector<vector<int>> merged_intervals;
                     vector<vector<int>> u_comp_rep;
                     vector<vector<int>> v_comp_rep = child->getCompRep();
 
-                    if (current_node->getStartBranchless()){
-                        Node* parent = current_node->getParent();
-                        u_comp_rep = parent->getUnionIntervals();
-                    } else {
-                        u_comp_rep = current_node->getUnionIntervals();
-                    }
-
+                    u_comp_rep = current_node->getUnionIntervals();
                     merged_intervals = mergeCompRep(u_comp_rep, v_comp_rep);
 
                     child->setUnionIntervals(merged_intervals);
                     child->clearCompRep();
 
+                } else {
+                    child->setUnionIntervals(current_node->getUnionIntervals());
                 }
                 if (child->getChildren().size() == 0){
                     for (vector<int> int_label : child->getUnionIntervals()){
@@ -322,6 +319,7 @@ void BFS_merge_intervals (Node* &node, string &file_name, unordered_map<int, int
                 }
             }
         }
+        current_node->clearUnion();
     }
     out_file.close();
 }

@@ -5,7 +5,6 @@ using namespace std;
 Node::Node()
 {
     children = {};
-    data = {};
     compact_rep = {};
     visited = false;
     branchless_tuples = {};
@@ -19,7 +18,6 @@ Node::Node(int new_state)
 {
     state = new_state;
     children = {};
-    data = {};
     compact_rep = {};
     visited = false;
     branchless_tuples = {};
@@ -33,7 +31,6 @@ Node::Node(int new_state, Node* parent){
     state = new_state;
     parent_state = parent;
     children = {};
-    data = {};
     compact_rep = {};
     visited = false;
     branchless_tuples = {};
@@ -47,7 +44,6 @@ Node::Node(int new_state, Node* parent, vector<int> new_data)
 {
     state = new_state;
     parent_state = parent;
-    data = new_data;
     children = {};
     compact_rep = {};
     visited = false;
@@ -72,10 +68,6 @@ void Node::setParent(Node* parent){
 
 void Node::addChild(Node* child){
     children.push_back(child);
-}
-
-void Node::setData(vector<int> new_data){
-    data = new_data;
 }
 
 void Node::setVisited(bool new_visited){
@@ -111,12 +103,15 @@ void Node::setRemoveNode(){
 }
 
 void Node::clearData_Branchless(){
-    data.clear();
     branchless_tuples.clear();
 }
 
 void Node::clearCompRep(){
     compact_rep.clear();
+}
+
+void Node::clearUnion(){
+    union_intervals.clear();
 }
 
 
@@ -130,10 +125,6 @@ Node* Node::getParent(){
 
 vector<Node* > Node::getChildren(){
     return children;
-}
-
-vector<int> Node::getData(){
-    return data;
 }
 
 bool Node::getVisited(){
@@ -152,7 +143,7 @@ vector<vector<int>> Node::getUnionIntervals(){
     return union_intervals;
 }
 
-bool Node::getStartBranchless(){
+bool Node::StartBranchless(){
     return startBranchless;
 }
 

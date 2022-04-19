@@ -11,7 +11,6 @@ private:
     int state;
     Node* parent_state;
     vector<Node* > children;
-    vector<int> data;
     bool visited;
     vector<vector<int>> branchless_tuples;
     vector<vector<int>> compact_rep;
@@ -23,7 +22,6 @@ public:
     void setState(int state);
     void setParent(Node* parent);
     void addChild(Node* child);
-    void setData(vector<int> new_data);
     void setVisited(bool visited);
     void addBranchlessSubpath(vector<int> subpath);
     void setBranchlessSubpath(vector<vector<int>> b_tuples);
@@ -35,17 +33,17 @@ public:
 
     void clearData_Branchless();
     void clearCompRep();
+    void clearUnion();
 
     int getState();
     Node* getParent();
     vector<Node* > getChildren();
-    vector<int> getData();
     bool getVisited();
     vector<vector<int>> getSubpaths();
     void insertNode(Node* &node, int state, queue<Node* > &q_nodes);
     vector<vector<int>> getCompRep();
     vector<vector<int>> getUnionIntervals();
-    bool getStartBranchless();
+    bool StartBranchless();
     bool getRemoveNode();
 
 

@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
     BFS_merge_intervals(root, output_file_name, A);
 
     A.clear();
-    delete root; // Is this correct???
+    // delete root; // Is this correct???
 
     auto end_time = steady_clock::now();
 
