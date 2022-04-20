@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
     
     // cout << "merge branchless" << endl;
 
-    DFS_merge_intervals(root, output_file_name, A);
+    // DFS_merge_intervals(root, output_file_name, A);
 
     BFS_merge_intervals(root, output_file_name, A);
 

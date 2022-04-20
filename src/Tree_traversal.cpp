@@ -330,13 +330,14 @@ void DFS_merge_intervals(Node* &root, string &file_name, unordered_map<int, int>
     while(!S.empty()){
         Node* current_node = S.top();
         S.pop();
-        cout << "Current node: " << current_node->getState() << endl;
+        // cout << "Parent node: " << current_node->getState() << endl;
 
         if(!current_node->getRemoveNode()){
 
 
             vector<Node*> list_children = current_node->getChildren();
             for(Node* child : list_children){
+                // cout << "Child: " << child->getState() << endl;
                 if(!child->getRemoveNode()){
                     S.push(child);
                 }
