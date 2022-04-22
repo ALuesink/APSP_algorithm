@@ -324,7 +324,7 @@ void BFS_merge_intervals (Node* &node, string &file_name, unordered_map<int, int
     out_file.close();
 }
 
-void merge_DFS(vector<vector<int>> &active_vec, vector<vector<int>> &comp_rep_child, vector<vector<int>> &STACK){
+vector<vector<int>> merge_DFS(vector<vector<int>> &active_vec, vector<vector<int>> &comp_rep_child, vector<vector<int>> &STACK){
     vector<vector<int>> to_STACK;
     vector<vector<int>> merged_intervals;
     int n = 0;
@@ -381,6 +381,7 @@ void merge_DFS(vector<vector<int>> &active_vec, vector<vector<int>> &comp_rep_ch
             }
         }
     }
+    return merged_intervals;
 }
 
 void unmerge(vector<vector<int>> &STACK, vector<vector<int>> &active_vec, vector<vector<int>> &comp_rep_child){
@@ -389,7 +390,7 @@ void unmerge(vector<vector<int>> &STACK, vector<vector<int>> &active_vec, vector
 
     while (n < active_vec.size() || m < comp_rep_child.size()) {
     
-        if(n > active_vec.size()){
+        if(n >= active_vec.size()){
             break;
         }
         else if(m != comp_rep_child.size()){
@@ -444,12 +445,14 @@ void DFS_recursive(Node* &node, ofstream &out_file, unordered_map<int, int> &A, 
     for(Node* child : list_children){
         if(!child->getRemoveNode()){
             // MERGE PART
-  
+            // cout << "merge: " << node->getState() << "-" << child->getState() << endl;
             if (!child->StartBranchless()){
                 vector<vector<int>> merged_intervals;
                 vector<vector<int>> comp_rep_child = child->getCompRep();
 
-                merge_DFS(active_vec, comp_rep_child, STACK);
+                merged_intervals = merge_DFS(active_vec, comp_rep_child, STACK);
+                active_vec = merged_intervals;
+                merged_intervals.clear();
                 comp_rep_child.clear();
             }
             if (child->getChildren().size() == 0){
@@ -464,10 +467,11 @@ void DFS_recursive(Node* &node, ofstream &out_file, unordered_map<int, int> &A, 
             DFS_recursive(child, out_file, A, STACK, active_vec);
             
             // UNMERGE PART
+            // cout << "unmerge: " << child->getState() << "-" << node->getState() << endl;
             vector<vector<int>> comp_rep_child = child->getCompRep();
             if(!comp_rep_child.empty()){
                 unmerge(STACK, active_vec, comp_rep_child);
-                }
+            }
             comp_rep_child.clear();
         }
     }
