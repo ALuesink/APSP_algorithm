@@ -458,9 +458,10 @@ void DFS_recursive(Node* &node, ofstream &out_file, unordered_map<int, int> &A, 
             if (child->getChildren().size() == 0){
                 for(vector<int> int_label : active_vec){
                     int state = child->getState();
-                    int index = A.at(state);
+                    // int index = A.at(state);
 
-                    out_file << index << " - " << int_label[0] << ": " << int_label[1] << endl;
+                    out_file << state << " - " << int_label[0] << ": " << int_label[1] << endl;
+                    // out_file << index << " - " << int_label[0] << ": " << int_label[1] << endl;
                 }
             }
             
