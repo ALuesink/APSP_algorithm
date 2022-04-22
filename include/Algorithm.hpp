@@ -70,3 +70,4 @@ void DFS_merge_branchles(Node* &root, unordered_map<int,int> &node_index, vector
 void BFS_merge_intervals(Node* &node, string &file_name, unordered_map<int, int> &A);
 void sort_tuples(vector<vector<int>> &sorted_tuples, unordered_map<int, int> &node_index);
 void DFS_merge_intervals(Node* &root, string &file_name, unordered_map<int, int> &A);
+void DFS_recursive(Node* &node, ofstream &out_file, unordered_map<int, int> &A, vector<vector<int>> &STACK, vector<vector<int>> &previous_vec);

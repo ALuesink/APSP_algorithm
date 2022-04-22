@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/algorithm",
-            "args": ["input/input_file.fasta", "output/output_test.txt"],
+            "args": ["input/input_paper.fasta", "output/output_paper_DFS.txt"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
