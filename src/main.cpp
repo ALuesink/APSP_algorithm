@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
     node_index.clear();
     
     // cout << "merge branchless" << endl;
-    vector<vector<int>> STACK(A.size()+1);
+    vector<stack<vector<int>>> STACK(A.size()+1);
     vector<vector<int>> active_vec = {};
     ofstream out_file;
     out_file.open(output_file_name);

@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/algorithm",
-            "args": ["input/staph_50.fasta", "output/staph_50_dfs.txt"],
+            "args": ["input/datasets_input/rhodobacter_1k.fasta", "output/rhodo_1k.txt"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

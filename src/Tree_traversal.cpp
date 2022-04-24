@@ -5,8 +5,6 @@
 #include <unordered_map>
 #include <queue>
 #include <vector>
-#include <boost/sort/spreadsort/spreadsort.hpp>
-
 
 using namespace std;
 
@@ -313,7 +311,6 @@ void BFS_merge_intervals (Node* &node, string &file_name, unordered_map<int, int
                         int index = A.at(state);
 
                         out_file << index << " - " << int_label[0] << ": " << int_label[1] << endl;
-                        // cout << state << " - " << int_label[0] << ": " << int_label[1] << endl;
 
                     }
                 }
@@ -324,7 +321,7 @@ void BFS_merge_intervals (Node* &node, string &file_name, unordered_map<int, int
     out_file.close();
 }
 
-vector<vector<int>> merge_DFS(vector<vector<int>> &active_vec, vector<vector<int>> &comp_rep_child, vector<vector<int>> &STACK){
+vector<vector<int>> merge_DFS(vector<vector<int>> &active_vec, vector<vector<int>> &comp_rep_child, vector<stack<vector<int>>> &STACK){
     vector<vector<int>> to_STACK;
     vector<vector<int>> merged_intervals;
     int n = 0;
@@ -350,7 +347,7 @@ vector<vector<int>> merge_DFS(vector<vector<int>> &active_vec, vector<vector<int
                 merged_intervals.push_back(n_interval);
                 n++;
             } else if (n_interval[0] == m_interval[0]){
-                if (n_interval[1] >= m_interval[1]){
+                if (n_interval[1] > m_interval[1]){
                     merged_intervals.push_back(n_interval);
                 } else {
                     merged_intervals.push_back(m_interval);
@@ -368,28 +365,47 @@ vector<vector<int>> merge_DFS(vector<vector<int>> &active_vec, vector<vector<int
         }
     }
 
+
+
     if(!to_STACK.empty()){
+
         int label = to_STACK[0][1];
         int start_interval = to_STACK[0][0];
-        for(vector<int> item : to_STACK){
-            if(item[1] == label){
-                STACK[start_interval] = {item[0], label};
-            } else {
-                start_interval = item[0];
-                label = item[1];
-                STACK[start_interval] = {start_interval, label};
+        int current_interval = start_interval;
+        for(vector<int> int_label : to_STACK){
+            if(int_label[0] == current_interval){
+                if(int_label[1] == label){
+                    if(!STACK[start_interval].empty()){
+                        vector<int> temp_vec = STACK[start_interval].top();
+                        if(temp_vec[1] == label){
+                            STACK[start_interval].pop();
+                        }
+                    }
+                    STACK[start_interval].push({int_label[0], label});
+                } else {
+                    start_interval = int_label[0];
+                    label = int_label[1];
+                    STACK[start_interval].push({start_interval, label});
+                }
+                current_interval++;
+            } else{
+                start_interval = int_label[0];
+                label = int_label[1];
+                STACK[start_interval].push({start_interval, label});
+                current_interval = start_interval + 1;
             }
         }
+
     }
     return merged_intervals;
 }
 
-void unmerge(vector<vector<int>> &STACK, vector<vector<int>> &active_vec, vector<vector<int>> &comp_rep_child){
+void unmerge(vector<stack<vector<int>>> &STACK, vector<vector<int>> &active_vec, vector<vector<int>> &comp_rep_child){
     int n = 0;
     int m = 0;
 
     while (n < active_vec.size() || m < comp_rep_child.size()) {
-    
+        
         if(n >= active_vec.size()){
             break;
         }
@@ -400,16 +416,17 @@ void unmerge(vector<vector<int>> &STACK, vector<vector<int>> &active_vec, vector
             if(n_interval == m_interval){
                 int interval = n_interval[0];
                 if(!STACK[interval].empty()){
-                    vector<int> new_int = STACK[interval];
+                    vector<int> new_int = STACK[interval].top();
+                    STACK[interval].pop();
                     active_vec[n] = {interval, new_int[1]};
                     if(new_int[0] != interval){
+                        int next_index = n + 1;
                         for(int index = interval; index < new_int[0]; index++){
-                            int next_index = n + 1;
                             active_vec[next_index] = {index+1, new_int[1]};
+                            next_index++;
                             m++;
                         }
-                    } 
-                    STACK[interval] = {};
+                    }
                     n++;
                 } else{
                     active_vec.erase(active_vec.begin()+n);
@@ -419,20 +436,6 @@ void unmerge(vector<vector<int>> &STACK, vector<vector<int>> &active_vec, vector
                 n++;
             }
         } else{
-            vector<int> n_interval = active_vec[n];
-            int interval = n_interval[0];
-
-            if(!STACK[interval].empty()){
-                vector<int> new_int = STACK[interval];
-                active_vec[n] = {interval, new_int[1]};
-                if(new_int[0] != interval){
-                    for(int index = interval; index < new_int[0]; index++){
-                        int next_index = n + 1;
-                        active_vec[next_index] = {index+1, new_int[1]};
-                    }
-                } 
-                STACK[interval] = {};
-            }
             n++;
         }
     }
@@ -440,7 +443,7 @@ void unmerge(vector<vector<int>> &STACK, vector<vector<int>> &active_vec, vector
 }
 
 
-void DFS_recursive(Node* &node, ofstream &out_file, unordered_map<int, int> &A, vector<vector<int>> &STACK, vector<vector<int>> &active_vec){
+void DFS_recursive(Node* &node, ofstream &out_file, unordered_map<int, int> &A, vector<stack<vector<int>>> &STACK, vector<vector<int>> &active_vec){
     vector<Node*> list_children = node->getChildren();
     for(Node* child : list_children){
         if(!child->getRemoveNode()){
@@ -448,20 +451,19 @@ void DFS_recursive(Node* &node, ofstream &out_file, unordered_map<int, int> &A, 
             // cout << "merge: " << node->getState() << "-" << child->getState() << endl;
             if (!child->StartBranchless()){
                 vector<vector<int>> merged_intervals;
-                vector<vector<int>> comp_rep_child = child->getCompRep();
+                vector<vector<int>> comp_rep_child_merge = child->getCompRep();
 
-                merged_intervals = merge_DFS(active_vec, comp_rep_child, STACK);
+                merged_intervals = merge_DFS(active_vec, comp_rep_child_merge, STACK);
                 active_vec = merged_intervals;
                 merged_intervals.clear();
-                comp_rep_child.clear();
+                comp_rep_child_merge.clear();
             }
             if (child->getChildren().size() == 0){
+                int state = child->getState();
                 for(vector<int> int_label : active_vec){
-                    int state = child->getState();
+                    
                     // int index = A.at(state);
-
                     out_file << state << " - " << int_label[0] << ": " << int_label[1] << endl;
-                    // out_file << index << " - " << int_label[0] << ": " << int_label[1] << endl;
                 }
             }
             
@@ -469,11 +471,12 @@ void DFS_recursive(Node* &node, ofstream &out_file, unordered_map<int, int> &A, 
             
             // UNMERGE PART
             // cout << "unmerge: " << child->getState() << "-" << node->getState() << endl;
-            vector<vector<int>> comp_rep_child = child->getCompRep();
-            if(!comp_rep_child.empty()){
-                unmerge(STACK, active_vec, comp_rep_child);
+            vector<vector<int>> comp_rep_child_unmerge = child->getCompRep();
+            
+            if(!comp_rep_child_unmerge.empty()){
+                unmerge(STACK, active_vec, comp_rep_child_unmerge);
             }
-            comp_rep_child.clear();
+            comp_rep_child_unmerge.clear();
         }
     }
 }
