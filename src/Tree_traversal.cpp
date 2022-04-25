@@ -306,11 +306,11 @@ void BFS_merge_intervals (Node* &node, string &file_name, unordered_map<int, int
                     child->setUnionIntervals(current_node->getUnionIntervals());
                 }
                 if (child->getChildren().size() == 0){
+                    int state = child->getState();
                     for (vector<int> int_label : child->getUnionIntervals()){
-                        int state = child->getState();
-                        int index = A.at(state);
+                        // int index = A.at(state);
 
-                        out_file << index << " - " << int_label[0] << ": " << int_label[1] << endl;
+                        out_file << state << " - " << int_label[0] << ": " << int_label[1] << endl;
 
                     }
                 }
