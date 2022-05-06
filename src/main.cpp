@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
     vector<vector<int>> active_vec = {};
     ofstream out_file;
     out_file.open(output_file_name);
-    out_file << "String a - string b: depth" << endl;
+    out_file << "String_A" << "\t" << "string_B" << "\t" << "depth" << endl;
 
     DFS_recursive(root, out_file, A, STACK, active_vec);
 

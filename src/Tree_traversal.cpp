@@ -310,7 +310,7 @@ void BFS_merge_intervals (Node* &node, string &file_name, unordered_map<int, int
                     for (vector<int> int_label : child->getUnionIntervals()){
                         // int index = A.at(state);
 
-                        out_file << state << " - " << int_label[0] << ": " << int_label[1] << endl;
+                        out_file << state << "\t" << int_label[0] << "\t" << int_label[1] << endl;
 
                     }
                 }
@@ -463,7 +463,7 @@ void DFS_recursive(Node* &node, ofstream &out_file, unordered_map<int, int> &A, 
                 for(vector<int> int_label : active_vec){
                     
                     // int index = A.at(state);
-                    out_file << state << " - " << int_label[0] << ": " << int_label[1] << endl;
+                    out_file << state << "\t" << int_label[0] << "\t" << int_label[1] << endl;
                 }
             }
             

@@ -152,8 +152,8 @@ bool Node::getRemoveNode(){
 }
 
 void Node::insertNode(Node* &node, int new_state, queue<Node* > &q_nodes){
-    vector<Node*> list_children = node->getChildren();
     Node* new_node = new Node(new_state, node);
+    vector<Node*> list_children = node->getChildren();
     list_children.push_back(new_node);
     node->children = list_children;
     q_nodes.push(new_node);
